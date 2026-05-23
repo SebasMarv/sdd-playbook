@@ -1,0 +1,78 @@
+schema: spec-driven
+
+# ============================================================================
+# Project context (leído por /opsx:propose como constraint para llenar artifacts)
+# ============================================================================
+context: |
+  # [PROJECT_NAME]
+
+  [Una línea con qué es el producto + a quién sirve.]
+
+  ## Stack
+  - Backend: [ej. Go 1.24, Node 20, Python 3.12]
+  - Frontend: [ej. React 18 + Vite + Ant Design v6]
+  - DB: [ej. PostgreSQL 16]
+  - Otros: [Redis, Keycloak, etc.]
+
+  ## Architectural Invariants (NON-NEGOTIABLE)
+
+  Listar las reglas que NINGÚN cambio puede violar sin enmienda explícita.
+
+  1. [INVARIANT 1 — ej. "Hexagonal estricto: services nunca tocan adapters directamente, sólo via ports"]
+  2. [INVARIANT 2 — ej. "No country hardcoding: prohibido `if country == 'PE'`, usar countryResolver"]
+  3. [INVARIANT N — ...]
+
+  ## Database changes
+  Cualquier cambio de schema requiere migración + código del backend en MISMO commit.
+  [Ajustar según tu tooling: golang-migrate, Prisma migrate, Alembic, etc.]
+
+  ## Operacional
+  - [Ej. "Repo en WSL2 + NTFS: git via cmd.exe wrapper"]
+  - [Ej. "NUNCA usar Co-Authored-By en commits"]
+  - [Ej. "Commit directo a main + push (no PRs en MVP)"]
+  - [Ej. "Spanish/English en mensajes user-facing"]
+  - [Ej. "Sin emojis salvo si se pide explícito"]
+
+  ## Reference docs
+  - [Listar docs de gap analysis, ADRs, plans históricos relevantes]
+  - progress/current.md, progress/history.md: estado de sesión durable
+  - .local/credentials.md: secrets locales gitignored
+
+# ============================================================================
+# Rules per artifact (Claude las respeta al llenar cada artifact)
+# ============================================================================
+rules:
+  proposal:
+    - "Incluir sección '## Pre-propose analysis' al INICIO: capabilities relacionadas leídas (openspec/specs/), changes históricos contrastados (openspec/changes/archive/), edge cases considerados, conflictos detectados, invariants potencialmente tocadas, y resoluciones acordadas con el usuario via chat. Audit trail de qué se analizó antes de proponer."
+    - "Incluir sección '## User Stories' con al menos US1 (P1, MVP). Formato: '**Como** <rol>, **quiero** <feature>, **para** <beneficio>'. P1 mandatorio, P2/P3 opcionales según scope. Si el change NO es feature (bugfix/refactor/cleanup), poner 'No aplica — <razón en 1 línea>'."
+    - "Incluir sección '## Architectural Impact' indicando si toca alguna de las Architectural Invariants del context. Si sí: justificar y proponer enmienda al context de este config.yaml en el mismo change."
+    - "Incluir sección '## Capabilities tocadas' listando carpetas de openspec/specs/ que se actualizarán al archivar."
+  specs:
+    - "Cada Requirement (### Requirement: <name>) DEBE tener al menos 1 Scenario (#### Scenario: <descriptive-name>) en formato WHEN/THEN."
+    - "Variantes IF, WHILE, WHERE permitidas cuando WHEN/THEN no encaja naturalmente (precondiciones → IF; estado continuo → WHILE; feature gates → WHERE)."
+    - "El nombre del Scenario debe ser descriptivo en kebab/snake-case (NO 'Scenario 1', SÍ 'country-pack-default-applied') — se vuelve el nombre del test automatizado asociado."
+  design:
+    - "Incluir sección '## Verification' con tabla mapeando User Story → Scenarios cubiertos → Test (formato: archivo::TestName). Trazabilidad triple US → Scenario → Test."
+    - "Si hay cambio de schema declarar la migración explícita en sección 'Data model changes'."
+    - "Componentes afectados deben respetar las capas arquitectónicas declaradas en context (ej. hexagonal: domain / application / adapters)."
+  tasks:
+    - "Cada task debe iniciar con tag [BE], [FE], [DB], [INFRA], [DOC], [TEST] o [GIT] tras el ID T###."
+    - "Si una task implica migración de schema, el commit asociado debe incluir el código del backend correspondiente — no separar SQL de código en commits distintos."
+    - "ANTES del [GIT] task final, ejecutar 'post-apply conflict review': releer openspec/specs/<capability>/ de cada capability tocada (declarada en proposal.md), verificar que ningún Scenario archivado quede roto por la implementación nueva. Si detecto regresión potencial: PAUSAR commit y reportar al usuario antes de proseguir."
+    - "La ÚLTIMA task de la fase de apply siempre debe ser [GIT] commit + push siguiendo CLAUDE.md (mensaje tipo 'feat(<change>): <descripción>' o 'fix(<change>): <descripción>')."
+    - "Tras /opsx:archive, hacer SEGUNDO [GIT] commit con mensaje 'chore(archive): <change-name>' que incluya la mutación de openspec/specs/ y el move a openspec/changes/archive/, y push origin main."
+    - "Ambos pushes pueden disparar auto-deploy si el proyecto tiene CI/CD continuo. Si el cambio toca runtime (no sólo docs), validar visualmente en URL prod tras el deploy."
+
+# ============================================================================
+# Preferences (convención del playbook, no OpenSpec nativo)
+# ============================================================================
+preferences:
+  session_level_default: quick
+  session_level_options:
+    quick: "Vocabulario 100% negocio (estados, módulos, campos del portal, cálculos, roles, flujos). Cero detalle técnico. Default para multi-proyecto / cerebro fragmentado."
+    standard: "Negocio + términos del proyecto cuando ayudan (nombres de módulos, endpoints, patrones existentes). Sin SQL ni código."
+    deep: "Técnico completo (tablas, columnas, FK, indexes, migrations, archivos). Para decisiones arquitectónicas críticas o cuando el usuario toca código personalmente."
+  override_protocol:
+    - "Mid-sesión: usuario puede decir 'modo <level>' / 'subí a <level>' / 'bajame a <level>'. Aplicar inmediatamente."
+    - "Por change crítico: Claude puede sugerir subir nivel temporariamente si detecta impacto arquitectónico grande, y volver al default tras el change."
+  important_note: "El nivel determina el VOCABULARIO de preguntas/explicaciones, NO la cantidad. La cantidad de preguntas la determina la ambigüedad real del pedido + edge cases detectados durante pre-propose analysis."

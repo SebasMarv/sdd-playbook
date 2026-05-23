@@ -1,12 +1,19 @@
 # sdd-playbook
 
-Playbook pragmático para adoptar **Spec-Driven Development** en proyectos nuevos o existentes con bajo overhead, usando OpenSpec como base + 3 prácticas adicionales que mejoran control y durabilidad de sesión.
+Playbook pragmático para adoptar **Spec-Driven Development** en proyectos
+nuevos o existentes con bajo overhead, usando **OpenSpec** como base + **7
+extensiones validadas** que mejoran control, trazabilidad y durabilidad de
+sesión.
 
-No es un framework nuevo — es una **guía curada de decisión + baseline reutilizable** sobre el ecosistema SDD existente (Spec-Kit, OpenSpec, harness-sdd).
+No es un framework nuevo — es una **guía curada de decisión + baseline
+reutilizable + 7 reglas que elevan el workflow** sobre el ecosistema SDD
+existente (Spec-Kit, OpenSpec, harness-sdd).
 
-**Status:** v0 (draft, pendiente validar con un piloto real antes de promover a v1).
+**Status:** v0.2.0 — baseline + extensiones validadas en proyecto piloto.
+Pendiente para v1.0: 3+ proyectos usando el kit y generalización post-uso.
 
-**Autor:** SebasMarv — destilado de investigación comparativa entre Spec-Kit, OpenSpec y harness-sdd (mayo 2026).
+**Autor:** SebasMarv — destilado de investigación comparativa entre
+Spec-Kit, OpenSpec y harness-sdd (mayo 2026).
 
 ---
 
@@ -20,7 +27,9 @@ Probé/investigué los tres frameworks SDD relevantes en 2026:
 | **OpenSpec** (Fission-AI) | Mejor para brownfield + solo dev / equipo chico. Bajo overhead, "verdad viva" en `specs/`. |
 | **harness-sdd** (betta-tech) | Repo de referencia, no tool. Ideas brillantes (multi-rol, R↔test, progress/) pero adoption cost alto y maturity baja. |
 
-**Para mi caso real** (1-2 devs por proyecto, mix brownfield/greenfield, multi-proyecto, multi-país arquitectura matters): OpenSpec + 3 prácticas (project.md robusto con invariants, templates customs, `progress/` directory). Ver `docs/02-decision-tree.md` si tu caso difiere.
+**Para mi caso real** (1-2 devs por proyecto, mix brownfield/greenfield,
+multi-proyecto, multi-país arquitectura matters): **OpenSpec + 7
+extensiones**. Ver `docs/02-decision-tree.md` si tu caso difiere.
 
 ---
 
@@ -30,76 +39,124 @@ Probé/investigué los tres frameworks SDD relevantes en 2026:
 sdd-playbook/
 ├── README.md                          ← este archivo
 ├── CHANGELOG.md
+├── LICENSE                            ← MIT
 ├── docs/
-│   ├── 01-comparativa.md              ← Spec-Kit vs OpenSpec vs harness-sdd, matriz completa
-│   ├── 02-decision-tree.md            ← Cuándo usar cuál según escala/tipo proyecto
-│   ├── 03-conventions-betta-tech.md   ← El workflow día a día
-│   └── 04-roadmap-validar.md          ← Qué falta validar tras pilotos
-├── baseline/                          ← lo que se copia a un proyecto
+│   ├── 01-comparativa.md              ← Spec-Kit vs OpenSpec vs harness-sdd
+│   ├── 02-decision-tree.md            ← Cuándo usar cuál según escala/tipo
+│   ├── 03-conventions-betta-tech.md   ← Workflow día a día con OpenSpec + ext.
+│   ├── 04-roadmap-validar.md          ← Qué falta validar / qué ya validamos
+│   └── 05-sdd-extensions.md           ← ⭐ Las 7 extensiones detalladas
+├── baseline/                          ← lo que se copia a un proyecto destino
 │   ├── openspec/
-│   │   ├── project.template.md        ← invariants en blanco para llenar
-│   │   ├── AGENTS.template.md         ← instrucciones para agentes AI
-│   │   └── changes/
-│   │       ├── proposal.template.md   ← override del default de OpenSpec
-│   │       ├── design.template.md     ← con sección Verification obligatoria
-│   │       └── tasks.template.md      ← con tags [BE]/[FE]/[DB]/[INFRA]
+│   │   └── config.template.yaml       ← config con context + rules + preferences
 │   ├── progress/
 │   │   ├── current.md.template
 │   │   └── history.md.template
-│   └── CLAUDE.md.template
+│   ├── .local/
+│   │   └── credentials.template.md    ← template para secrets locales
+│   └── CLAUDE.md.template             ← operational guide template
 ├── scripts/
 │   ├── setup-new-project.sh           ← greenfield: init clean
-│   ├── setup-existing-project.sh      ← brownfield: init + prompt para seed specs
+│   ├── setup-existing-project.sh      ← brownfield: init + brownfield seed
 │   └── validate.sh                    ← chequeos estructurales sin CI
-└── examples/                          ← se llena con casos reales post-piloto
+└── examples/                          ← se llena con casos reales post-pilotos
 ```
 
 ---
 
-## Cómo usarlo — proyecto nuevo (greenfield)
+## Las 7 extensiones que añade sobre OpenSpec puro
+
+| # | Extensión | Qué hace |
+|---|-----------|----------|
+| 1 | User Stories P1/P2/P3 en proposal | MVP-first thinking obligatorio |
+| 2 | EARS Scenarios WHEN/THEN obligatorios | 1 Scenario = 1 test |
+| 3 | Verification trazable triple | US → Scenario → Test en design.md |
+| 4 | Pre-propose analysis MANDATORY | Detecta gaps/conflicts antes de proponer |
+| 5 | session_level (quick/standard/deep) | Vocabulario por nivel (default quick) |
+| 6 | Post-apply conflict review | Detecta regresiones antes del commit |
+| 7 | E2E como change explícito | No mezclar E2E con feature work |
+
+Detalle completo en `docs/05-sdd-extensions.md`.
+
+---
+
+## Cómo usarlo — proyecto NUEVO (greenfield)
 
 ```bash
 cd /path/al/proyecto/nuevo
 npm install -g @fission-ai/openspec@latest
 bash /path/a/sdd-playbook/scripts/setup-new-project.sh
-# editás openspec/project.md con stack real + invariants
 ```
 
-Después de eso, tu día a día es:
-- `/opsx:propose "feature X"` → llenás proposal/design/tasks
-- `/opsx:apply` → Claude implementa
-- `/opsx:archive` → fusiona en `openspec/specs/`
+El script ejecuta:
+1. `openspec init --tools claude --force` (instala 4 commands + 4 skills).
+2. Copia `openspec/config.yaml` con context (invariants a llenar) + rules
+   (las 7 extensiones precargadas) + preferences (session_level).
+3. Crea `progress/current.md` + `history.md`.
+4. Crea `.local/credentials.md` template (gitignored).
+5. Crea `CLAUDE.md` si no existe.
+6. Actualiza `.gitignore` con `.local/` y `commit_msg.txt`.
 
-Más detalle en `docs/03-conventions-betta-tech.md`.
+Después:
+- Editás `openspec/config.yaml` (llenás invariants reales + ajustás context).
+- Editás `.local/credentials.md` con valores reales.
+- Editás `CLAUDE.md` con particularidades del entorno.
+- `git commit` + push.
+- Primer `/opsx:propose "<tu feature>"` y arrancás.
 
 ---
 
-## Cómo usarlo — proyecto existente (brownfield)
+## Cómo usarlo — proyecto EXISTENTE (brownfield)
 
 ```bash
 cd /path/al/proyecto/existente
 npm install -g @fission-ai/openspec@latest
 bash /path/a/sdd-playbook/scripts/setup-existing-project.sh
-# primer sprint: documentar capabilities actuales en openspec/specs/
-# después: workflow normal de propose → apply → archive
 ```
 
-El script de existing-project te guía para crear specs iniciales que reflejen el estado **actual** del sistema antes de proponer cambios.
+Hace todo lo del greenfield + opcionalmente scaffolea
+`openspec/specs/<modulo>/spec.md` placeholders detectando módulos comunes
+(backend/internal/, src/modules/, etc.).
+
+**Primer sprint dedicado:** documentar capabilities actuales en
+`openspec/specs/` antes de proponer cambios. Esto es lo que evita que el
+sistema "mienta sobre sí mismo".
 
 ---
 
-## Las 3 prácticas adicionales que añade este kit sobre OpenSpec puro
+## El flujo día a día (resumido)
 
-1. **`openspec/project.md` con sección "Architectural Invariants"** — las reglas no-negociables del proyecto (equivalente a Constitution de Spec-Kit, pero como guía documental, no gate automático). Claude las lee y respeta.
+```
+Vos: "Quiero <feature>"
 
-2. **Templates customs en `openspec/changes/`** — sobrescriben los defaults para forzar:
-   - `proposal.md` con sección **Architectural Impact** (¿toca alguna invariant?)
-   - `design.md` con sección **Verification** (mapa requirement R<n> ↔ test)
-   - `tasks.md` con tags `[BE]/[FE]/[DB]/[INFRA]` para repartir trabajo
+Claude (Paso 0 — Pre-propose analysis):
+  ├─ Lee openspec/specs/ relacionados + archive/ con changes históricos.
+  ├─ Imagina flow end-to-end + edge cases + conflictos.
+  └─ Te muestra análisis + preguntas dirigidas (en vocabulario session_level).
 
-3. **`progress/` directory** — log durable de sesión que sobrevive resets de contexto del LLM. Contiene `current.md` (qué estás haciendo) e `history.md` (qué hiciste).
+Vos: respondés en chat.
 
-Ver `docs/03-conventions-betta-tech.md` para cómo encajan juntas.
+Claude (Paso 1 — /opsx:propose):
+  ├─ Crea changes/<name>/ con proposal/design/tasks/specs.
+  ├─ Llena con User Stories + EARS Scenarios + Verification trazable.
+  └─ Te muestra: "Listo, ¿/opsx:apply?"
+
+Vos: "dale" (o pedís ajustes).
+
+Claude (Paso 2 — /opsx:apply):
+  ├─ Implementa código + tests siguiendo tasks.md.
+  ├─ Post-apply conflict review (releer specs/ tocadas).
+  └─ Última task [GIT]: commit + push automático.
+
+Claude (Paso 3 — /opsx:archive):
+  ├─ Fusiona deltas en openspec/specs/<capability>/spec.md.
+  ├─ Move change a openspec/changes/archive/YYYY-MM-DD-<name>/.
+  └─ Segundo commit + push automático.
+
+Vos: validás en URL prod tras Dokploy auto-deploy (o equivalente).
+```
+
+Detalle completo en `docs/03-conventions-betta-tech.md`.
 
 ---
 
@@ -107,19 +164,22 @@ Ver `docs/03-conventions-betta-tech.md` para cómo encajan juntas.
 
 - CI scripts elaboradas (overhead innecesario para 1-2 devs).
 - PR templates (no uso PRs en MVPs).
-- Definition of Done formal (vos sabés cuándo está done).
-- Multi-agent roles (irrelevante para solo dev; ideas en `docs/01-comparativa.md` si escalás a equipo).
-- Lock-in con tooling propietario (todo es markdown + bash).
+- Multi-agent roles formales (irrelevante para solo dev; ver
+  `docs/01-comparativa.md` si escalás a equipo).
+- Lock-in con tooling propietario (todo es markdown + bash + npm).
 
 ---
 
 ## Roadmap
 
-- **v0 (actual)**: investigación + templates draft. Sin uso real validado.
-- **v1**: tras piloto en Gesttio (1-2 semanas), ajustar templates con lecciones.
-- **v2**: tras 3+ proyectos usando el kit, generalizar lo que se repita.
+- **v0 (2026-05-23, deprecated)**: investigación + templates draft con
+  asunciones incorrectas sobre OpenSpec.
+- **v0.2.0 (2026-05-23, actual)**: ⭐ corrección de baseline + las 7
+  extensiones validadas en proyecto piloto (Gesttio P2P TWM).
+- **v1.0 (futuro)**: tras 3+ proyectos usando el kit, generalización
+  post-uso real.
 
-Ver `docs/04-roadmap-validar.md` para detalles de qué validar.
+Ver `docs/04-roadmap-validar.md` para detalles.
 
 ---
 

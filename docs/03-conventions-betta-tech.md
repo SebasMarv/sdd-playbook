@@ -1,6 +1,8 @@
 # Convenciones de uso día a día
 
-Cómo se usa este kit (OpenSpec + las 3 prácticas) en un proyecto real. Lectura para alguien que va a abrir un proyecto con esto y no sabe por dónde arrancar.
+> **⚠️ v0.2.0 update (2026-05-23):** este documento está parcialmente desactualizado tras la corrección de baseline. Las menciones a `openspec/project.md`, `openspec/AGENTS.md` y "templates customs en changes/" son de v0.1.0 y son incorrectas. La realidad de OpenSpec v1.3.1 es: todo va en `openspec/config.yaml`. Ver **`docs/05-sdd-extensions.md`** para el workflow actualizado con las 7 extensiones. Este doc se reescribirá completamente en v0.3.0 tras más uso real.
+
+Cómo se usa este kit (OpenSpec + las 7 extensiones) en un proyecto real. Lectura para alguien que va a abrir un proyecto con esto y no sabe por dónde arrancar.
 
 ---
 

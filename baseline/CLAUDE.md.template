@@ -1,35 +1,102 @@
-# CLAUDE.md — Pointer to source of truth
+# CLAUDE.md
 
-Este archivo está leído por Claude Code automáticamente al abrir el proyecto. Su único job es **direccionar** al agente a los archivos correctos. No duplica info que viva en otro lado.
+Este archivo es el **operational guide** del proyecto para Claude Code.
 
----
-
-## Source of truth del proyecto
-
-- **Arquitectura, stack, invariants, convenciones:** `openspec/project.md`
-- **Capabilities actuales del sistema (qué hace HOY):** `openspec/specs/`
-- **Cambios activos / propuestas:** `openspec/changes/`
-- **Histórico de cambios cerrados:** `openspec/changes/archive/`
-- **Estado de sesión actual:** `progress/current.md`
-- **Log de ingeniería:** `progress/history.md`
-- **Reglas para agentes AI:** `openspec/AGENTS.md`
+**Architectural truth, invariants, conventions y project context viven en
+`openspec/config.yaml#context` — NO duplicar acá.**
 
 ---
 
-## Quick rules (ver `openspec/AGENTS.md` para detalle)
+## Source of truth — leer estos PRIMERO
 
-1. **Antes de proponer:** leer `openspec/project.md` (sobre todo Architectural Invariants) + capabilities relevantes.
-2. **Antes de aplicar:** confirmar invariants respetadas y design.md tiene sección Verification completa.
-3. **Skip permitido para:** typos, fixes triviales, renames sin cambio de comportamiento, bumps minor.
-4. **NO crear `.md` informales:** usar `progress/history.md` si necesitás dejar nota.
-5. **Al terminar sesión:** append a `progress/history.md`, actualizar `progress/current.md`.
+| Tema | Donde vive |
+|------|------------|
+| Arquitectura + Architectural Invariants + rules de specs | `openspec/config.yaml` (campo `context:` y `rules:`) |
+| Capabilities actuales del sistema (qué hace HOY) | `openspec/specs/` |
+| Cambios activos / propuestas en curso | `openspec/changes/` |
+| Histórico de cambios cerrados | `openspec/changes/archive/` |
+| Estado de sesión actual | `progress/current.md` |
+| Engineering log cross-sesión | `progress/history.md` |
+| Credenciales operacionales | `.local/credentials.md` (gitignored) |
+
+---
+
+## Context Recovery Convention (MANDATORY)
+
+**Antes de CUALQUIER cambio de código:**
+
+1. **Leer `progress/current.md`** — entender dónde quedamos.
+2. **Leer `openspec/config.yaml`** — invariants + rules + preferences.
+3. **Si la feature toca capability documentada:** leer `openspec/specs/<capability>/`.
+4. **Query memoria persistente** (si tu agente tiene una) para contexto cross-sesión.
+
+### Session Start Protocol (al iniciar sesión nueva post `/clear`)
+
+Tras leer los archivos arriba, el PRIMER mensaje al usuario debe incluir:
+
+1. **Resumen 1-line** de qué quedó pendiente.
+2. **Pregunta de `session_level`** (definido en `openspec/config.yaml#preferences`):
+   > ¿En qué nivel arrancamos hoy? quick (default — vocabulario negocio) /
+   > standard (negocio + términos proyecto) / deep (técnico completo).
+
+Override mid-sesión: usuario dice "modo standard" / "subí a deep" / "bajame a quick".
+
+**Diferencia importante:** el nivel determina el VOCABULARIO de mis preguntas,
+NO la cantidad. La cantidad la determina la ambigüedad real del pedido.
+
+---
+
+## Workflow OpenSpec (resumido)
+
+### Paso 0 — Pre-propose analysis (MANDATORY antes de `/opsx:propose`)
+
+Cuando el usuario solicita un cambio:
+
+1. Read related capabilities en `openspec/specs/<related>/spec.md`.
+2. Search archive en `openspec/changes/archive/` por changes relacionados.
+3. Mental flow simulation — imaginar end-to-end con actores, datos, edge cases.
+4. Identify gaps, conflicts, invariants tocadas.
+5. Present analysis al usuario + preguntas dirigidas.
+6. Tras respuestas → invocar `/opsx:propose`.
+
+### Paso 1 — `/opsx:propose`
+
+Crea `openspec/changes/<name>/` con proposal/design/tasks/specs. Llenar
+respetando `rules:` de `openspec/config.yaml`.
+
+### Paso 2 — `/opsx:apply`
+
+Claude implementa. **ANTES del `[GIT]` task final:** post-apply conflict
+review (releer specs/ de capabilities tocadas, verificar no regresiones).
+Si OK: commit + push automático.
+
+### Paso 3 — `/opsx:archive`
+
+Cierra change, fusiona deltas en `openspec/specs/`, move a archive/.
+Segundo commit + push automático.
+
+### Bugfixes triviales
+
+(typo, rename sin cambio comportamiento, bump minor): commit directo
+permitido, anotar 1 línea en `progress/history.md`.
 
 ---
 
 ## Entorno
 
-- [Documentar particularidades del entorno: WSL2, paths Windows, comandos especiales, etc.]
+- [Documentar particularidades: WSL2/Windows paths, comandos especiales, etc.]
 - [Trello/ClickUp/Linear: dónde se trackean tasks externas si aplica]
 - [Deploy: cómo se valida, dónde]
+- [MCP tools disponibles]
+- [Convención git si especial (cmd.exe wrapper en WSL+NTFS, etc.)]
 
-(Esta sección reemplaza lo que típicamente vivía en un CLAUDE.md monolítico — mantenerla acotada a entorno operacional, no arquitectura.)
+---
+
+## Convenciones operacionales (de openspec/config.yaml#context)
+
+Resumen de las más críticas para mi día a día (NO duplicar, sólo referencia):
+- [Ej. "Commit directo a main + push (no PRs en MVP)"]
+- [Ej. "NUNCA usar Co-Authored-By en commits"]
+- [Ej. "Spanish en mensajes user-facing"]
+
+Detalle completo: `openspec/config.yaml#context`.
