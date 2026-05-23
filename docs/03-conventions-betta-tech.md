@@ -11,7 +11,7 @@ Cómo se usa este kit (OpenSpec + las 3 prácticas) en un proyecto real. Lectura
 ```bash
 cd /path/al/proyecto-nuevo
 npm install -g @fission-ai/openspec@latest    # si no está global
-bash /path/a/sdd-toolkit/scripts/setup-new-project.sh
+bash /path/a/sdd-playbook/scripts/setup-new-project.sh
 ```
 
 El script:
@@ -28,7 +28,7 @@ Después del script, tu primera tarea humana es llenar `openspec/project.md` con
 ```bash
 cd /path/al/proyecto-existente
 npm install -g @fission-ai/openspec@latest
-bash /path/a/sdd-toolkit/scripts/setup-existing-project.sh
+bash /path/a/sdd-playbook/scripts/setup-existing-project.sh
 ```
 
 Idéntico al anterior, **más** un prompt al final que te recuerda: tu primer sprint debe documentar las capabilities actuales en `openspec/specs/<capability>/spec.md` antes de proponer cualquier change. Esto es lo que evita que el sistema mienta sobre sí mismo.

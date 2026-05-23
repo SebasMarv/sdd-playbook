@@ -3,7 +3,7 @@
 # setup-new-project.sh — Inicializa OpenSpec + baseline templates + progress/ en un proyecto NUEVO (greenfield).
 #
 # Uso (desde la raíz del proyecto destino):
-#   bash /path/a/sdd-toolkit/scripts/setup-new-project.sh
+#   bash /path/a/sdd-playbook/scripts/setup-new-project.sh
 #
 # Asume:
 #   - OpenSpec ya instalado globalmente (npm install -g @fission-ai/openspec@latest)
@@ -16,7 +16,7 @@ KIT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 BASELINE="$KIT_ROOT/baseline"
 PROJECT_ROOT="$(pwd)"
 
-echo "=== sdd-toolkit: setup-new-project ==="
+echo "=== sdd-playbook: setup-new-project ==="
 echo "Kit:     $KIT_ROOT"
 echo "Project: $PROJECT_ROOT"
 echo ""
@@ -77,5 +77,5 @@ echo "1. Editá openspec/project.md con stack real + Architectural Invariants re
 echo "2. Editá CLAUDE.md con particularidades de entorno (si copió el template)."
 echo "3. Cuando hagas /opsx:propose, usá los archivos en openspec/.kit-templates/"
 echo "   como referencia para llenar proposal/design/tasks."
-echo "4. Commiteá: git add openspec/ progress/ CLAUDE.md && git commit -m 'chore: sdd-toolkit baseline'"
+echo "4. Commiteá: git add openspec/ progress/ CLAUDE.md && git commit -m 'chore: sdd-playbook baseline'"
 echo ""

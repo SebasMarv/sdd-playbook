@@ -3,7 +3,7 @@
 # validate.sh — Chequeos estructurales del setup OpenSpec + baseline en un proyecto.
 #
 # Corre desde la raíz del proyecto:
-#   bash /path/a/sdd-toolkit/scripts/validate.sh
+#   bash /path/a/sdd-playbook/scripts/validate.sh
 #
 # No requiere CI. Es un check manual para confirmar que el setup quedó OK
 # o detectar drift después de un tiempo de uso.
@@ -18,7 +18,7 @@ pass() { echo "  [OK]   $1"; }
 fail() { echo "  [FAIL] $1"; FAIL=$((FAIL+1)); }
 warn() { echo "  [WARN] $1"; WARN=$((WARN+1)); }
 
-echo "=== sdd-toolkit: validate ==="
+echo "=== sdd-playbook: validate ==="
 echo "Project: $PROJECT_ROOT"
 echo ""
 

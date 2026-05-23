@@ -4,6 +4,14 @@ Formato: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versionado: S
 
 ## [Unreleased]
 
+### Changed
+- Renamed project `sdd-toolkit` → `sdd-playbook` (mejor posicionamiento: "playbook curado", no framework nuevo).
+- README intro reescrito para reflejar el rename y el posicionamiento público.
+- Paths absolutos personales en README reemplazados por placeholders genéricos.
+
+### Added
+- MIT LICENSE.
+
 ## [0.1.0] - 2026-05-23
 
 ### Added

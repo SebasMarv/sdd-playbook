@@ -1,10 +1,12 @@
-# sdd-toolkit
+# sdd-playbook
 
-Kit personal para adoptar **Spec-Driven Development** en proyectos nuevos o existentes con bajo overhead, usando OpenSpec como base + 3 prácticas adicionales que mejoran control y durabilidad de sesión.
+Playbook pragmático para adoptar **Spec-Driven Development** en proyectos nuevos o existentes con bajo overhead, usando OpenSpec como base + 3 prácticas adicionales que mejoran control y durabilidad de sesión.
 
-**Status:** v0 (draft, pendiente validar con piloto en Gesttio antes de promover a v1).
+No es un framework nuevo — es una **guía curada de decisión + baseline reutilizable** sobre el ecosistema SDD existente (Spec-Kit, OpenSpec, harness-sdd).
 
-**Autor:** SebasMarv — kit destilado de investigación comparativa entre Spec-Kit, OpenSpec y harness-sdd (mayo 2026).
+**Status:** v0 (draft, pendiente validar con un piloto real antes de promover a v1).
+
+**Autor:** SebasMarv — destilado de investigación comparativa entre Spec-Kit, OpenSpec y harness-sdd (mayo 2026).
 
 ---
 
@@ -25,7 +27,7 @@ Probé/investigué los tres frameworks SDD relevantes en 2026:
 ## Estructura del repo
 
 ```
-sdd-toolkit/
+sdd-playbook/
 ├── README.md                          ← este archivo
 ├── CHANGELOG.md
 ├── docs/
@@ -59,7 +61,7 @@ sdd-toolkit/
 ```bash
 cd /path/al/proyecto/nuevo
 npm install -g @fission-ai/openspec@latest
-bash /mnt/d/Users/AMARQUEZ/Documents/sdd-toolkit/scripts/setup-new-project.sh
+bash /path/a/sdd-playbook/scripts/setup-new-project.sh
 # editás openspec/project.md con stack real + invariants
 ```
 
@@ -77,7 +79,7 @@ Más detalle en `docs/03-conventions-betta-tech.md`.
 ```bash
 cd /path/al/proyecto/existente
 npm install -g @fission-ai/openspec@latest
-bash /mnt/d/Users/AMARQUEZ/Documents/sdd-toolkit/scripts/setup-existing-project.sh
+bash /path/a/sdd-playbook/scripts/setup-existing-project.sh
 # primer sprint: documentar capabilities actuales en openspec/specs/
 # después: workflow normal de propose → apply → archive
 ```
@@ -123,4 +125,4 @@ Ver `docs/04-roadmap-validar.md` para detalles de qué validar.
 
 ## License
 
-Privado. Sin license formal aún — uso interno.
+MIT — ver [LICENSE](./LICENSE).

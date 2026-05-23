@@ -7,7 +7,7 @@
 #   - Sugiere un punto de partida para seedear openspec/specs/.
 #
 # Uso (desde la raíz del proyecto destino):
-#   bash /path/a/sdd-toolkit/scripts/setup-existing-project.sh
+#   bash /path/a/sdd-playbook/scripts/setup-existing-project.sh
 
 set -euo pipefail
 
@@ -40,7 +40,7 @@ echo "  3. Si hay docs/ o wiki/ con info de arquitectura, migrá lo útil a"
 echo "     openspec/project.md (Architectural Invariants) y openspec/specs/."
 echo ""
 echo "  4. Inicializá progress/history.md con:"
-echo "     '## YYYY-MM-DD — adopted sdd-toolkit'"
+echo "     '## YYYY-MM-DD — adopted sdd-playbook'"
 echo ""
 
 # Pregunta opcional: ¿inicializar specs/ a partir de subdirectorios comunes?
