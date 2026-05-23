@@ -16,6 +16,9 @@ Thumbs.db
 # Logs
 *.log
 
+# Temp commit message files (cmd.exe + -F workflow)
+commit_msg.txt
+
 # Node (in case future tooling adds it)
 node_modules/
 
