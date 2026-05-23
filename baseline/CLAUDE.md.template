@@ -1,0 +1,35 @@
+# CLAUDE.md — Pointer to source of truth
+
+Este archivo está leído por Claude Code automáticamente al abrir el proyecto. Su único job es **direccionar** al agente a los archivos correctos. No duplica info que viva en otro lado.
+
+---
+
+## Source of truth del proyecto
+
+- **Arquitectura, stack, invariants, convenciones:** `openspec/project.md`
+- **Capabilities actuales del sistema (qué hace HOY):** `openspec/specs/`
+- **Cambios activos / propuestas:** `openspec/changes/`
+- **Histórico de cambios cerrados:** `openspec/changes/archive/`
+- **Estado de sesión actual:** `progress/current.md`
+- **Log de ingeniería:** `progress/history.md`
+- **Reglas para agentes AI:** `openspec/AGENTS.md`
+
+---
+
+## Quick rules (ver `openspec/AGENTS.md` para detalle)
+
+1. **Antes de proponer:** leer `openspec/project.md` (sobre todo Architectural Invariants) + capabilities relevantes.
+2. **Antes de aplicar:** confirmar invariants respetadas y design.md tiene sección Verification completa.
+3. **Skip permitido para:** typos, fixes triviales, renames sin cambio de comportamiento, bumps minor.
+4. **NO crear `.md` informales:** usar `progress/history.md` si necesitás dejar nota.
+5. **Al terminar sesión:** append a `progress/history.md`, actualizar `progress/current.md`.
+
+---
+
+## Entorno
+
+- [Documentar particularidades del entorno: WSL2, paths Windows, comandos especiales, etc.]
+- [Trello/ClickUp/Linear: dónde se trackean tasks externas si aplica]
+- [Deploy: cómo se valida, dónde]
+
+(Esta sección reemplaza lo que típicamente vivía en un CLAUDE.md monolítico — mantenerla acotada a entorno operacional, no arquitectura.)

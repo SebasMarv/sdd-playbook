@@ -1,0 +1,20 @@
+feat: sdd-toolkit v0.1.0 — investigación + templates + scripts
+
+Kit personal para adoptar Spec-Driven Development en proyectos nuevos
+o existentes con bajo overhead, basado en OpenSpec + 3 prácticas
+adicionales (project.md con Architectural Invariants, templates customs
+en changes/, progress/ directory para durabilidad de sesión).
+
+Contenido v0:
+- docs/01-comparativa.md: Spec-Kit vs OpenSpec vs harness-sdd, matriz completa
+- docs/02-decision-tree.md: cuándo usar qué según escala/tipo proyecto
+- docs/03-conventions-betta-tech.md: workflow día a día
+- docs/04-roadmap-validar.md: qué validar tras piloto Gesttio
+- baseline/openspec/: templates de project.md, AGENTS.md, changes/{proposal,design,tasks}
+- baseline/progress/: templates de current.md, history.md
+- baseline/CLAUDE.md.template
+- scripts/setup-new-project.sh (greenfield), setup-existing-project.sh (brownfield), validate.sh
+- CHANGELOG.md, .gitignore, README.md
+
+Pendiente: piloto en Gesttio (1-2 semanas) para validar templates y
+promover a v1 con lecciones reales.

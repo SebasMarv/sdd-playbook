@@ -1,0 +1,21 @@
+# History — Engineering Log
+
+Append-only. Una entrada por sesión productiva (no por commit).
+
+Formato:
+
+```
+## YYYY-MM-DD
+- [Acción 1, en lenguaje de negocio]
+- [Acción 2]
+- Notes: [opcional, observaciones]
+```
+
+---
+
+## YYYY-MM-DD (ejemplo — borrar al primer uso real)
+
+- Started change `add-tax-codes-multipais`
+- Llenado proposal + design
+- Implementadas tasks T001-T005 (DB + backend models)
+- Notes: descubrí que tax_codes tiene un campo `vigencia` que SUNAT no documenta bien. Pendiente clarificar con cliente.
