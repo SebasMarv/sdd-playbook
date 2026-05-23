@@ -1,6 +1,29 @@
 # Roadmap de validación
 
-Este kit es **v0**. Las decisiones están basadas en investigación + un install hands-on de Spec-Kit, pero **no en uso real de OpenSpec en un proyecto completo todavía**. Lo siguiente lista qué hace falta validar.
+> **Update 2026-05-23 (v0.2.0):** Lo crítico ya se validó en el piloto Gesttio. Ver sección "Validado en v0.2.0" abajo. El resto de este doc refleja el estado v0.1.0 — algunas asunciones se descubrieron incorrectas durante el piloto y se corrigieron en v0.2.0.
+
+## Validado en v0.2.0 (post-piloto Gesttio)
+
+- ✅ OpenSpec v1.3.1 setup hands-on en proyecto real (Gesttio P2P TWM, brownfield Go+React+Postgres).
+- ✅ Las 7 extensiones codificadas en `openspec/config.yaml` y commiteadas a producción del piloto.
+- ✅ Auto commit + push tras `/opsx:apply` y `/opsx:archive` confirmado como convención viable.
+- ✅ `.local/credentials.md` pattern para secrets locales (gitignored).
+- ✅ Orphan branch + force push como técnica de scrub de historia con credenciales expuestas (último-recurso, con rotación de credenciales obligatoria previa).
+
+## Asunciones de v0.1.0 que se corrigieron en v0.2.0
+
+Durante el piloto descubrimos que las siguientes asunciones eran INCORRECTAS:
+
+- ❌ "OpenSpec usa `openspec/project.md` separado" → **NO**. Todo el project context vive en `openspec/config.yaml#context`.
+- ❌ "OpenSpec usa `openspec/AGENTS.md` separado" → **NO**. Las instrucciones para AI viven en `.claude/commands/opsx/*.md` instaladas por `openspec init --tools claude`.
+- ❌ "Se pueden sobrescribir templates de `changes/`" → **NO directamente**. Los templates oficiales vienen del npm package; se influencian vía `rules:` en `config.yaml`, no copiando archivos.
+- ❌ "OpenSpec tiene 9 comandos (`/opsx:new`, `/opsx:ff`, `/opsx:verify`, etc.)" → **NO en v1.3.1**. Son 4: propose, apply, archive, explore.
+
+---
+
+## Pendiente — qué falta validar para v1.0
+
+Este kit es **v0.2.0**. Lo siguiente lista qué FALTA para promover a v1.0.
 
 ---
 
